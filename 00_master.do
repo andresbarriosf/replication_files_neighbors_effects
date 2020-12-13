@@ -73,6 +73,7 @@ do "${code_path}${dash}02_01_01_main_neighbors_results.do"
 do "${code_path}${dash}02_01_02_heterogeneity_neighbors_results.do"
 do "${code_path}${dash}02_01_03_mediating_neighbors_results.do"
 do "${code_path}${dash}02_01_04_robustness_neighbors_results.do"
+do "${code_path}${dash}02_01_05_summary_statistics_neighbors.do"
 
 *** 2.2 Estimate the effect of the closest neighbor going to university in other time periods:
 use "${temp_path}${dash}closest_neighbor_multiple_t.dta", clear

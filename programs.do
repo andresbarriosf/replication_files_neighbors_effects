@@ -303,6 +303,7 @@ program define coefficients_plots
 
       graph save   "rf_`file_name'.gph", replace
       graph export "rf_`file_name'.pdf", replace as(pdf)
+      drop `iv'_chart*
     }
 
     *** 2sls:
@@ -319,6 +320,7 @@ program define coefficients_plots
 
       graph save   "iv_`file_name'.gph", replace
       graph export "iv_`file_name'.pdf", replace as(pdf)
+      drop `t'_chart*
     }
 
     *** First stage:
@@ -335,6 +337,7 @@ program define coefficients_plots
 
       graph save   "fs_`file_name'.gph", replace
       graph export "fs_`file_name'.pdf", replace as(pdf)
+      drop `iv'_chart*
     }
   }
 
@@ -355,6 +358,7 @@ program define coefficients_plots
 
       graph save   "rf_`file_name'.gph", replace
       graph export "rf_`file_name'.pdf", replace as(pdf)
+      drop `iv'_chart*
     }
 
     *** 2sls:
@@ -371,6 +375,7 @@ program define coefficients_plots
 
       graph save   "iv_`file_name'.gph", replace
       graph export "iv_`file_name'.pdf", replace as(pdf)
+      drop `t'_chart*
     }
 
     *** First stage:
@@ -387,7 +392,8 @@ program define coefficients_plots
 
       graph save   "fs_`file_name'.gph", replace
       graph export "fs_`file_name'.pdf", replace as(pdf)
+      drop `iv'_chart*
     }
   }
-
+  
 end

@@ -12,7 +12,7 @@ local stat_neighbours psu_female psu_age lowIncome midIncome highIncome pe_n1 pe
 private_hi_n public_hi_n other_hi_n  public_n charter_n private_n hc tp
 g12_gpa g9_gpa score_rd single married divorced widow work live_parents_n
 live_relatives_n live_independently_n live_others_n family_group hh_father_n hh_mother_n
-hh_applicant_n hh_other_n ;
+hh_applicant_n hh_other_n;
 #delimit cr
 
 *** Characteristics of potential applicants

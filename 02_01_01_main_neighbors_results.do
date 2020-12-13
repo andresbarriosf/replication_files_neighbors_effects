@@ -53,8 +53,8 @@ forvalues x = 1/2 {
   local bw2`x' = e(h_r)
 
   *** Bandwidths for charts:
-  local bwA = round(`bw1',5)
-  local bwB = round(`bw2',5)
+  local bwA = round(`bw1`x'',5)
+  local bwB = round(`bw2`x'',5)
 
   estimate_effects uni_o score_rd cutoff uni `x' `bw1`x'' `bw2`x'' "" fid_2_o psu_year_o
 
