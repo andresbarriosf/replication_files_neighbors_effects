@@ -284,8 +284,6 @@ program define coefficients_plots
   *** plot: type of plot (rf, iv, all).
   *** plot_opts: horizontal or vertical.
   *** file_name: name of the file.
-  *** iv: instrumental variable.
-  *** t: treatment variable.
   args plot plot_opts file_name
 
   *** Horizontal
@@ -347,7 +345,7 @@ program define coefficients_plots
     if "`plot'" == "rf" | "`plot'" == "all" {
       #delimit;
       coefplot m_*
-      , yline(0, lwidth(thin) lpattern(dash) lcolor(red)) keep(`iv'_chart*) levels(95)
+      , vertical yline(0, lwidth(thin) lpattern(dash) lcolor(red)) keep(`iv'_chart*) levels(95)
       msymbol(circle) mcolor(navy) msize(medsmall) legend(off) ciopts(recast(rcap)
       lwidth(thin) lcolor(navy)) grid(none) offset(0) format(%03.2f)
       xlabel( , labsize(vsmall) angle(horizontal))
@@ -363,7 +361,7 @@ program define coefficients_plots
     if "`plot'" == "iv" | "`plot'" == "all" {
       #delimit;
       coefplot iv_*
-      , yline(0, lwidth(thin) lpattern(dash) lcolor(red)) keep(`t'_chart*) levels(95)
+      , vertical yline(0, lwidth(thin) lpattern(dash) lcolor(red)) keep(`t'_chart*) levels(95)
       msymbol(circle) mcolor(navy) msize(medsmall) legend(off) ciopts(recast(rcap)
       lwidth(thin) lcolor(navy)) grid(none) offset(0) format(%03.2f)
       xlabel( , labsize(vsmall) angle(horizontal))
@@ -379,7 +377,7 @@ program define coefficients_plots
     if "`plot'" == "all" {
       #delimit;
       coefplot fs_*
-      , yline(0, lwidth(thin) lpattern(dash) lcolor(red)) keep(`iv'_chart*) levels(95)
+      , vertical yline(0, lwidth(thin) lpattern(dash) lcolor(red)) keep(`iv'_chart*) levels(95)
       msymbol(circle) mcolor(navy) msize(medsmall) legend(off) ciopts(recast(rcap)
       lwidth(thin) lcolor(navy)) grid(none) offset(0) format(%03.2f)
       xlabel( , labsize(vsmall) angle(horizontal))
