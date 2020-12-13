@@ -63,6 +63,7 @@ do "${code_path}${dash}01_03_02_siblings_estimation_samples.do"
 ***    Closest neighbor in other periods.
 ***    Other close neighbors in t-1.
 ********************************************************************************
+cd "$output_path${dash}Neighbors"
 
 *** 2.1 Estimate the effect of the closest neighbor going to university in t-1:
 use "${temp_path}${dash}closest_neighbor_t1.dta", clear
@@ -88,6 +89,7 @@ do "${code_path}${dash}02_02_03_neighbors_results_other_d.do"
 ********************************************************************************
 *** III. ESTIMATION OF SIBLINGS' EFFECTS
 ********************************************************************************
+cd "$output_path${dash}Siblings"
 
 *** 3.1 Estimate the effect of an older sibling going to university:
 use "${temp_path}${dash}siblings.dta", clear

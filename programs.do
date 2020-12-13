@@ -27,10 +27,10 @@ program define estimate_effects
   *** restrictions: sample restrictions.
   *** cluster: clustering level to compute standard errors.
   *** yfe: year fixed effects.
-	args o rv iv x bw1 bw2 restrictions cluster yfe
+	args o rv iv t x bw1 bw2 restrictions cluster yfe
 
   *** Definition of local macros:
-	local if "`restrictions' & `rv' >= -`bw1' & `rv' <= `bw2'"
+	local if "`rv' >= -`bw1' & `rv' <= `bw2' `restrictions'"
   local covs1  c.`rv' c.`rv'#1.`iv'
 	local covs2  c.`rv' c.`rv'#c.`rv' c.`rv'#1.`iv' c.`rv'#c.`rv'#1.`iv'
 
@@ -73,7 +73,7 @@ program define tables
 
 	*** TABLE II - University Enrollment:
 	#delimit;
-	estout `rf'
+	estout "`rf'"
 	using "`file_name'_rf.tex",
 	cells(b(star fmt(%9.3f)) se(par fmt(%9.3f)))
 	stats(N ymean, fmt(0 2) labels("N. of students" "Outcome mean" ))
@@ -82,7 +82,7 @@ program define tables
 	#delimit cr
 
 	#delimit;
-	estout `iv'
+	estout "`iv'"
 	using "`file_name'_2sls.tex",
 	cells(b(star fmt(%9.3f)) se(par fmt(%9.3f)))
 	stats(N fstage ymean, fmt(0 2 2) labels("N. of students" "Kleibergen-Paap F statistic" "Outcome mean" ))
@@ -91,7 +91,7 @@ program define tables
 	#delimit cr
 
 	#delimit;
-	estout `fs'
+	estout "`fs'"
 	using "`file_name'_fs.tex",
 	cells(b(star fmt(%9.3f)) se(par fmt(%9.3f)))
 	stats(N, fmt(0) labels("N. of students"))
@@ -124,7 +124,7 @@ program define reduced_form_plot
   args var x rv iv bw1 bw2 bin1 bin2 restrictions cluster yfe yfeb file_name
 
   *** Locals:
-	local if "`restrictions' & `rv' >= -`bw1' & `rv' <= `bw2'"
+	local if "`rv' >= -`bw1' & `rv' <= `bw2' `restrictions'"
 	local vtext1: variable label `o'
   local vtext2: variable label `iv'
 
@@ -231,7 +231,7 @@ program define coefficients_for_plots
   args o rv iv t x bw1 bw2 restrictions cluster yfe plot counter my_label
 
   *** Definition of local macros:
-	local if "`restrictions' & `rv' >= -`bw1' & `rv' <= `bw2'"
+	local if "`rv' >= -`bw1' & `rv' <= `bw2' `restrictions'"
   local covs1  c.`rv' c.`rv'#1.`iv'
 	local covs2  c.`rv' c.`rv'#c.`rv' c.`rv'#1.`iv' c.`rv'#c.`rv'#1.`iv'
 
