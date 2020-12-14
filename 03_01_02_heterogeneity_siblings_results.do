@@ -4,9 +4,11 @@
                         Tables: F.III and F.IV
 
 *******************************************************************************/
+local bw11 = 37.07
+local bw21 = 74.51
 
 *** Table F.III *****************************************************************
-foreach var of varlist same_gender age_difference5 {
+foreach var of varlist same_gender age_difference4 age_difference5 {
 
     forvalues x = 0/1{
       gen u_`var'`x' = uni_y

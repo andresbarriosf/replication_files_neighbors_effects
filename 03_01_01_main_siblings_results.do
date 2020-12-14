@@ -21,8 +21,8 @@ label variable uni_maj_acc 		  "Probability of enrolling in an accredited progra
 label variable retention_system       "Probability of remaining in any university"
 label variable retention_institution  "Probability of remaining in same university"
 
-label variable graduates_he_y	  "Probability of completing higher ed."
-label variable graduates_uni_y  "Probability of completing university"
+label variable any_degree_y	        "Probability of completing higher ed."
+label variable university_degree_y  "Probability of completing university"
 
 *** Table VII *******************************************************************
 forvalues x = 1/2 {
@@ -31,8 +31,8 @@ forvalues x = 1/2 {
 
   *** Robust approach proposed by Cattaneo, Calonico and Titunik (2014, 2017):
   #delimit;
-  rdrobust uni_y score_rd if  uni_y !=. & Sample = 1,
-  c(0) fuzzy(uni_o) deriv(0) p(`x') q(`y') kernel(uniform)
+  rdrobust uni_y score_rd_o if  uni_y !=. & Sample == 1,
+  c(0) fuzzy(uni_o) deriv(0) p(`x') q(`y') kernel(triangular)
   covs(yr_2 yr_3 yr_4 yr_5 yr_6 yr_7 yr_8 yr_9)
   bwselect(msetwo) vce(cluster family) level(95) all;
   #delimit cr;
@@ -56,14 +56,14 @@ forvalues x = 1/2 {
   local bwA = round(`bw1`x'',5)
   local bwB = round(`bw2`x'',5)
 
-  estimate_effects uni_y score_rd_o cutoff_o uni_o `x' `bw1`x'' `bw2`x'' "& Sample = 1" family psu_year_y
+  estimate_effects uni_y score_rd_o cutoff_o uni_o `x' `bw1`x'' `bw2`x'' "& Sample == 1" family psu_year_y
 
   if `x' == 1 local f "4"
   if `x' == 2 local f "C11"
   *** First stage plot:
-  reduced_form_plot uni_o `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "& Sample = 1" family psu_year_y 9 "figure`f'a"
+  reduced_form_plot uni_o `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "& Sample == 1" family psu_year_y 9 "figure`f'a"
   *** Reduced form plot:
-  reduced_form_plot uni_y `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "& Sample = 1" family psu_year_y 9 "figure`f'b"
+  reduced_form_plot uni_y `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "& Sample == 1" family psu_year_y 9 "figure`f'b"
 }
 
 tables "m1_uni_y m2_uni_y" "iv1_uni_y iv2_uni_y" "fs1_uni_y fs2_uni_y" score_rd_o "table7"
@@ -72,7 +72,7 @@ estimates drop _all
 *** Table VIII ******************************************************************
 foreach var of varlist he_y voc_y uni_acc enrolls_cruch_y uni_maj_acc same_uni diff_uni{
 
-    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& Sample = 1" family psu_year_y
+    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& Sample == 1" family psu_year_y
 
 }
 
@@ -80,9 +80,12 @@ tables "m1_*" "iv1_*" "fs1_*" score_rd_o "table8";
 estimates drop _all
 
 *** Table IX *******************************************************************
-foreach var of varlist retention_system retention_institution graduates_he_y	graduates_uni_y {
-
-    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& Sample = 1" family psu_year_y
+foreach var of varlist retention_system retention_institution any_degree_y university_degree_y {
+	
+	if "`var'" == "any_degree_y" | "`var'" == "university_degree_y" local add "& psu_year_y <= 2013"
+	if "`var'" != "any_degree_y" & "`var'" != "university_degree_y" local add ""
+	
+    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& Sample == 1 `add'" family psu_year_y
 
 }
 

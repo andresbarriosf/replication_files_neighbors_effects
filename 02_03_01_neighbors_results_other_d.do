@@ -7,9 +7,9 @@
 
 *** Figure III *****************************************************************
 forvalues x = 1/4{
-	coefficients_for_plots  uni_o score_rd cutoff uni 1 49.09 64.35 "& distance_quartiles == `x' & Sample == 1" fid_2_o psu_year_o "iv" `x' "Quartile `x'"
+	coefficients_for_plots  uni_o score_rd cutoff uni 1 49.09 64.35 "& distance_quartiles == `x'" fid_2_o psu_year_o "iv" `x' "Quartile `x'"
 }
-coefficients_plots "iv" "vertical" "figure3"
+coefficients_plots "iv" "vertical" "figure3" cutoff uni 
 
 *** Table G.I ******************************************************************
 foreach var of varlist best100 best125 best150 best175 best200 {
@@ -19,9 +19,10 @@ foreach var of varlist best100 best125 best150 best175 best200 {
 			if "`var'" == "best150" local text u150
 			if "`var'" == "best175" local text u175
 			if "`var'" == "best200" local text u200
+			
 
 			gen `text' = uni_o
-			estimate_effects 	`text' score_rd cutoff uni 1 49.09 64.35 "& `var' == 1 & Sample == 1" fid_2_o psu_year_o
+			estimate_effects 	`text' score_rd cutoff uni 1 49.09 64.35 "& `var' == 1" fid_2_o psu_year_o
 			drop `text'
 }
 

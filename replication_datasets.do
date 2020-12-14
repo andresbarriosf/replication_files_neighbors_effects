@@ -182,7 +182,7 @@ keep if Sample0 == 1
 keep mrun psu_year score_rd cutoff uni2 mrun psu_year_o uni2_o yr_* distance_quartile best* km_to_code fid_2_o
 compress
 rename (uni2 uni2_o)(uni uni_o)
-save "/Volumes/Andres for MAC/00_final_datasets_aej_applied/aej_close_neighbor_multiple_d.dta",
+save "/Volumes/Andres for MAC/00_final_datasets_aej_applied/aej_close_neighbor_multiple_d.dta", replace
 
 
 
@@ -233,40 +233,67 @@ save "/Volumes/Andres for MAC/00_final_datasets_aej_applied/aej_close_neighbor_m
   - live_parents_n live_relatives_n live_independently_n live_parents_o live_relatives_o live_independently_o
 
 *******************************************************************************/
-keep if Sample1 == 1 | Sample1B == 1
+use "/Users/andresbarriosfernandez/Dropbox/00. JMP Replication Files/01. Input/02. Siblings/hermanos1.dta"
 
-local id_vars       mrun psu_year mrun_o psu_year_o yr_1 yr_2 yr_3 yr_4 yr_5 yr_6
-local estimation    score_rd cutoff uni2 Sample 
-local clustering    fid_2_o psu_municipality_o psu_region_o
+keep if Sample1 == 1
 
 #delimit;
-local outcomes      uni2_o he_o voc_o uni_acc enrolls_cruch_o uni_maj_acc same_uni diff_uni
-                    retention_inst_o retention_uni_o university_degree_o any_degree_o
-                    takes_psu2 active_cruch_o applyFA_o cutoff_o receives_funding_o g12_attendance_o g12_gpa_o score_rd_o cond_score_rd_o loans;
+rename (año_proceso_o año_proceso_y psuRD_o attendsU2_o Sample1 mrun_madre attendsU2_y attendsHE_y attendsVHE_y university_degree_o any_degree_o
+activeCRUCH receivedFA_y asistencia psuRD_y psuRD2_y Loan2)
+(psu_year_o psu_year_y score_rd_o uni_o Sample family uni_y he_y voc_y university_degree_y any_degree_y
+active_cruch_y received_funding_y g12_attendance_y score_rd_y cond_score_rd_y loans);
+#delimit cr
+
+gen male_y = 1 - female_y
+gen same_gender = female_y == female_o & female_y !=.
+
+gen age_difference4 = age_dif >= 4
+replace age_difference4 =. if age_dif < 0 | age_dif ==.
+
+gen age_difference5 = age_dif >= 5
+replace age_difference5 =. if age_dif < 0 | age_dif ==.
+
+tab psu_year_y, gen(yr_)
+
+
+local id_vars       mrun_o psu_year_o mrun psu_year_y yr_1 yr_2 yr_3 yr_4 yr_5 yr_6 yr_7 yr_8 yr_9
+local estimation    score_rd_o cutoff_o uni_o Sample
+local clustering    family
+
+#delimit;
+local outcomes      uni_y he_y voc_y uni_acc enrolls_cruch_y uni_maj_acc same_uni diff_uni
+                    retention_system retention_institution university_degree_y any_degree_y
+                    takes_psu2 active_cruch_y applyFA_y cutoff_y received_funding_y g12_attendance_y hs_gpa12_y score_rd_y cond_score_rd_y loans;
 #delimit cr
 
 #delimit;
-local sum_stats     psu_female  psu_female_o psu_male_o psu_age psu_age_o ad
-                    pe_n1 pe_n2 pe_n3 pe_n4 pe_n5 pe_n6 pe_n7
-                    pe_o1 pe_o2 pe_o3 pe_o4 pe_o5 pe_o6 pe_o7
-                    lowIncome_o midIncome_o highIncome_o lowIncome midIncome highIncome
-                    psu_rbd_o
-                    public_n  charter_n private_n public_o charter_o private_o hc_o tp_o hc tp
-                    g12_gpa g12_gpa_o g9_gpa_o
-                    family_group family_group_o family_group_work family_group_work_o family_group_he family_group_he_o
-                    hh_father_n hh_mother_n hh_applicant_n hh_father_o hh_mother_o hh_applicant_o
-                    work work_o single single_o
-                    private_hi_n public_hi_n private_hi_o public_hi_o
-                    both_alive_n father_alive_n mother_alive_n none_alive_n both_alive_o father_alive_o mother_alive_o none_alive_o
-                    live_parents_n live_relatives_n live_independently_n live_parents_o live_relatives_o live_independently_o
-                    km_to_code;
+local sum_stats     female_o female_y male_y age_o age_y age_dif
+                    pe_o1 pe_o2 pe_o3 pe_o4 pe_o5 pe_o6
+                    pe_y1 pe_y2 pe_y3 pe_y4 pe_y5 pe_y6
+                    LowIncome_y MidIncome_y HighIncome_y LowIncome_o MidIncome_o HighIncome_o
+                    rbd
+                    public_o charter_o private_o  public_y charter_y private_y HC_o HC_y TP_o TP_y
+                    hs_gpa12_o hs_gpa12_y hs_gpa9_y
+                    grupo_familiar_o grupo_familiar cuantos_trabajan_o cuantos_trabajan fg_higherEd_o fg_higherEd
+                    hh_father_o hh_mother_o hh_applicant_o hh_other_o hh_father_y hh_mother_y hh_applicant_y hh_other_y
+                    tiene_trabajo_rem_o tiene_trabajo_rem Single_o Single_y
+                    private_hi_o public_hi_o private_hi_y public_hi_y
+                    parents_alive_o father_alive_o mother_alive_o none_alive_o parents_alive_y father_alive_y mother_alive_y none_alive_y
+                    live_parents_o live_relatives_o live_independently_o live_parents_y live_relatives_y live_independently_y;
 #delimit cr
 
-local heterogeneity similar_ses2 same_gender age_difference1 old_neighbor_o neighbor_remains mother_housewife psu_region_o positive_difference negative_difference att1
+local heterogeneity  same_gender age_difference4 age_difference5
 
 keep  `id_vars' `estimation' `clustering' `outcomes' `sum_stats' `heterogeneity'
 order `id_vars' `estimation' `clustering' `outcomes' `sum_stats' `heterogeneity'
 
-rename (uni2 uni2_o)(uni uni_o)
+gen paid_job_y = tiene_trabajo_rem == 2 | tiene_trabajo_rem == 3
+replace paid_job_y =. if tiene_trabajo_rem ==. | tiene_trabajo_rem == 0
 
-save "/Volumes/Andres for MAC/00_final_datasets_aej_applied/aej_closest_neighbor1.dta", replace
+gen paid_job_o = tiene_trabajo_rem_o == 2 | tiene_trabajo_rem_o == 3
+replace paid_job_o =. if tiene_trabajo_rem_o ==. | tiene_trabajo_rem_o == 0
+drop tiene_trabajo_rem*
+rename(grupo_familiar_o grupo_familiar cuantos_trabajan_o cuantos_trabajan)(family_size_o family_size_y work_fg_o work_fg_y)
+
+
+save "/Volumes/Andres for MAC/00_final_datasets_aej_applied/aej_siblings.dta", replace

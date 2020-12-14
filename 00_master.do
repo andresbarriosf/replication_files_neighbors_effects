@@ -25,7 +25,7 @@ global code_path  	"${main_path}${dash}07. R&R AEJ CODE"
 global temp_path  	"${main_path}${dash}08. R&R AEJ DATA"
 global output_path  "${main_path}${dash}09. R&R AEJ OUTPUT"
 */
-
+global input_path 	"/Users/andresbarriosfernandez/Dropbox/00. JMP Replication Files/01. Input"
 global code_path  	"/Users/andresbarriosfernandez/Documents/GitHub/replication_files_neighbors_effects"
 global temp_path  	"/Volumes/Andres for MAC/00_final_datasets_aej_applied/"
 global output_path  "/Users/andresbarriosfernandez/Dropbox/00. JMP Replication Files/12. Outputs Replication"
@@ -70,12 +70,11 @@ do "${code_path}${dash}01_03_02_siblings_estimation_samples.do"
 ***    Closest neighbor in other periods.
 ***    Other close neighbors in t-1.
 ********************************************************************************
-cd "$output_path${dash}Neighbors"
+cd "$output_path${dash}01_Neighbors"
 
 *** 2.1 Estimate the effect of the closest neighbor going to university in t-1:
 use "${temp_path}${dash}aej_closest_neighbor1.dta", clear
 estimates drop _all
-
 do "${code_path}${dash}02_01_01_main_neighbors_results.do"
 do "${code_path}${dash}02_01_02_heterogeneity_neighbors_results.do"
 do "${code_path}${dash}02_01_03_mediating_neighbors_results.do"
@@ -83,21 +82,19 @@ do "${code_path}${dash}02_01_04_summary_statistics_neighbors.do"
 do "${code_path}${dash}02_01_05_robustness_neighbors_results.do"
 
 *** 2.2 Estimate the effect of the closest neighbor going to university in other time periods:
-use "${temp_path}${dash}closest_neighbor_multiple_t.dta", clear
+use "${temp_path}${dash}aej_closest_neighbor_multiple_t.dta", clear
 estimates drop _all
-
 do "${code_path}${dash}02_02_01_neighbors_results_other_t.do"
 
 *** 2.3 Estimate the effect of other closest neighbor going to university in t-1:
-use "${temp_path}${dash}closes_neighbors_multiple_d.dta", clear
+use "${temp_path}${dash}aej_close_neighbor_multiple_d.dta", clear
 estimates drop _all
-
 do "${code_path}${dash}02_03_01_neighbors_results_other_d.do"
 
 ********************************************************************************
 *** III. ESTIMATION OF SIBLINGS' EFFECTS
 ********************************************************************************
-cd "$output_path${dash}Siblings"
+cd "$output_path${dash}02_Siblings"
 
 *** 3.1 Estimate the effect of an older sibling going to university:
 use "${temp_path}${dash}siblings.dta", clear
