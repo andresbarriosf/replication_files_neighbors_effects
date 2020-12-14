@@ -37,7 +37,7 @@ program define estimate_effects
 	*** Reduced form effect:
 	#delimit;
 	reghdfe `o' `iv' `covs`x'' if `o' !=. &  `if',
-	absorb(i.psu_year_o) cluster(`cluster');
+	absorb(i.`yfe') cluster(`cluster');
 	#delimit cr
 	estadd ysumm
 	estimates store m`x'_`o'
@@ -45,7 +45,7 @@ program define estimate_effects
   *** 2SLS effects
 	#delimit;
 	ivreghdfe `o' `covs`x'' (`t' = `iv') if `o' !=. & `if',
-	absorb(`yfe') cluster(`cluster') first ffirst savefirst savefprefix(fs_);
+	absorb(i.`yfe') cluster(`cluster') first ffirst savefirst savefprefix(fs_);
 	#delimit cr
 	estadd ysumm
 	estadd scalar fstage = e(widstat)
@@ -244,7 +244,7 @@ program define coefficients_for_plots
 
   	#delimit;
   	reghdfe `o' `iv'_chart`counter' `covs`x'' if `o' !=. &  `if',
-  	absorb(i.psu_year_o) cluster(`cluster');
+  	absorb(`yfe') cluster(`cluster');
   	#delimit cr
   	estadd ysumm
   	estimates store m_`counter'
