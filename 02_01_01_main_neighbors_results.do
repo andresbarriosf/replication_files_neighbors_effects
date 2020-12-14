@@ -5,7 +5,7 @@
                             Figures: II and C.X
 *******************************************************************************/
 
-label variable uni  "Neighbor's Probability of enrolling in university"
+label variable uni      "Neighbor's Probability of enrolling in university"
 label variable score_rd "Neighbor's Average PSU Score (Reading and Math)"
 
 label variable uni_o  "Probability of enrolling in university"
@@ -58,10 +58,12 @@ forvalues x = 1/2 {
 
   estimate_effects uni_o score_rd cutoff uni `x' `bw1`x'' `bw2`x'' "" fid_2_o psu_year_o
 
+  if `x' == 1 local f "2"
+  if `x' == 2 local f "C10"
   *** First stage plot:
-  reduced_form_plot uni   `x' score_rd cutoff `bwA' `bwB' 5 5.5 "" fid_2_o psu_year_o 6 "figure2a"
+  reduced_form_plot uni   `x' score_rd cutoff `bwA' `bwB' 5 5.5 "" fid_2_o psu_year_o 6 "figure`f'a"
   *** Reduced form plot:
-  reduced_form_plot uni_o `x' score_rd cutoff `bwA' `bwB' 5 5.5 "" fid_2_o psu_year_o 6 "figure2b"
+  reduced_form_plot uni_o `x' score_rd cutoff `bwA' `bwB' 5 5.5 "" fid_2_o psu_year_o 6 "figure`f'b"
 }
 
 tables "m1_uni_o m2_uni_o" "iv1_uni_o iv2_uni_o" "fs1_uni_o fs2_uni_o" score_rd "table2"
