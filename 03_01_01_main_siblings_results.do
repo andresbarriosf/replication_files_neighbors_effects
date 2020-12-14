@@ -31,7 +31,7 @@ forvalues x = 1/2 {
 
   *** Robust approach proposed by Cattaneo, Calonico and Titunik (2014, 2017):
   #delimit;
-  rdrobust uni_y score_rd if  uni_y !=.,
+  rdrobust uni_y score_rd if  uni_y !=. & Sample = 1,
   c(0) fuzzy(uni_o) deriv(0) p(`x') q(`y') kernel(uniform)
   covs(yr_2 yr_3 yr_4 yr_5 yr_6 yr_7 yr_8 yr_9)
   bwselect(msetwo) vce(cluster family) level(95) all;
@@ -56,14 +56,14 @@ forvalues x = 1/2 {
   local bwA = round(`bw1`x'',5)
   local bwB = round(`bw2`x'',5)
 
-  estimate_effects uni_y score_rd_o cutoff_o uni_o `x' `bw1`x'' `bw2`x'' "" family psu_year_y
+  estimate_effects uni_y score_rd_o cutoff_o uni_o `x' `bw1`x'' `bw2`x'' "& Sample = 1" family psu_year_y
 
   if `x' == 1 local f "4"
   if `x' == 2 local f "C11"
   *** First stage plot:
-  reduced_form_plot uni_o `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "" family psu_year_y 9 "figure`f'a"
+  reduced_form_plot uni_o `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "& Sample = 1" family psu_year_y 9 "figure`f'a"
   *** Reduced form plot:
-  reduced_form_plot uni_y `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "" family psu_year_y 9 "figure`f'b"
+  reduced_form_plot uni_y `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "& Sample = 1" family psu_year_y 9 "figure`f'b"
 }
 
 tables "m1_uni_y m2_uni_y" "iv1_uni_y iv2_uni_y" "fs1_uni_y fs2_uni_y" score_rd "table7"
@@ -72,7 +72,7 @@ estimates drop _all
 *** Table VIII ******************************************************************
 foreach var of varlist he_y voc_y uni_acc enrolls_cruch_y uni_maj_acc same_uni diff_uni{
 
-    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "" family psu_year_y
+    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& Sample = 1" family psu_year_y
 
 }
 
@@ -82,7 +82,7 @@ estimates drop _all
 *** Table IX *******************************************************************
 foreach var of varlist retention_system retention_institution graduates_he_y	graduates_uni_y {
 
-    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "" family psu_year_y
+    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& Sample = 1" family psu_year_y
 
 }
 
