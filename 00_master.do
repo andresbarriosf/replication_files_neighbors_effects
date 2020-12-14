@@ -72,8 +72,8 @@ estimates drop _all
 do "${code_path}${dash}02_01_01_main_neighbors_results.do"
 do "${code_path}${dash}02_01_02_heterogeneity_neighbors_results.do"
 do "${code_path}${dash}02_01_03_mediating_neighbors_results.do"
-do "${code_path}${dash}02_01_04_robustness_neighbors_results.do"
-do "${code_path}${dash}02_01_05_summary_statistics_neighbors.do"
+do "${code_path}${dash}02_01_04_summary_statistics_neighbors.do"
+do "${code_path}${dash}02_01_05_robustness_neighbors_results.do"
 
 *** 2.2 Estimate the effect of the closest neighbor going to university in other time periods:
 use "${temp_path}${dash}closest_neighbor_multiple_t.dta", clear
@@ -85,7 +85,7 @@ do "${code_path}${dash}02_02_01_neighbors_results_other_t.do"
 use "${temp_path}${dash}closest_neighbor_multiple_d.dta", clear
 estimates drop _all
 
-do "${code_path}${dash}02_02_03_neighbors_results_other_d.do"
+do "${code_path}${dash}02_03_01_neighbors_results_other_d.do"
 
 ********************************************************************************
 *** III. ESTIMATION OF SIBLINGS' EFFECTS

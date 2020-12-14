@@ -196,8 +196,23 @@ drop uniA uniB uniC uniD
 
 
 *** Figure C5  *****************************************************************
-use "${temp_path}${dash}  ", clear
+use "${temp_path}${dash}closest_neighbor_gapM1.dta", clear
 estimates drop _all
+
+tab psu_year_o, gen(yr_)
+
+#delimit;
+rdrobust uni_o score_rd if  uni_o !=.,
+c(0) fuzzy(uni) deriv(0) p(`x') q(`y') kernel(uniform)
+covs(yr_2 yr_3 yr_4 yr_5 yr_6)
+bwselect(msetwo) vce(cluster fid_2_o) level(95) all;
+#delimit cr;
+
+*** Bandwidths for estimation:
+local bw1 = round(e(h_l),5)
+local bw2 = round(e(h_r),5)
+
+reduced_form_plot uni_o 1 score_rd cutoff `bw1' `bw2' 5 5.5 "" fid_2_o psu_year_o 6 "figureC5"
 
 *** Table C1  ******************************************************************
 use "${temp_path}${dash}closest_neighbor_gap1b.dta", clear
@@ -212,3 +227,39 @@ bwselect(msetwo) vce(cluster fid_2_o) level(95) all;
 
 local bw1 = e(h_l)
 local bw1 = e(h_r)
+
+
+foreach var of varlist uni_o takes_psu2 applyFA_o cond_score_rd_o g12_gpa_o {
+  	estimate_effects 	`var' score_rd cutoff uni 1 `bw1' `bw2' "" fid_2_o psu_year_o
+}
+
+tables "m1_*" "iv1_*" "fs1_*" score_rd "tableC1"
+estimates drop _all
+
+*** Table C2, Figure C12  ******************************************************
+use "${temp_path}${dash}closest_applicant_gap1.dta", clear
+
+tab psu_year_n, gen(yr_)
+
+#delimit;
+rdrobust pa_registered200 score_rd_n if  id == 1 & Sample0 == 1,
+c(0) fuzzy(uni2_n) deriv(0) p(1) q(2) kernel(uniform)
+covs(yr_2 yr_3 yr_4 yr_5 yr_6)
+bwselect(msetwo) vce(cluster fid_2_n) level(95) all;
+#delimit cr;
+
+local bw1 = e(h_l)
+local bw1 = e(h_r)
+
+*** Table:
+estimate_effects km_to_code score_rd_n cutoff_n uni_n 1 `bw1' `bw2' "" fid_2_n psu_year_n
+tables "m1_*" "iv1_*" "fs1_*" score_rd_n "tableC2"
+estimates drop _all
+
+*** Figure:
+coefficients_for_plots pa_registered50  score_rd_n cutoff_n uni_n 1 `bw1' `bw2' "" fid_2_n psu_year_n "rf" 1 "In 50 meters"
+coefficients_for_plots pa_registered100 score_rd_n cutoff_n uni_n 1 `bw1' `bw2' "" fid_2_n psu_year_n "rf" 1 "In 100 meters"
+coefficients_for_plots pa_registered150 score_rd_n cutoff_n uni_n 1 `bw1' `bw2' "" fid_2_n psu_year_n "rf" 1 "In 150 meters"
+coefficients_for_plots pa_registered200 score_rd_n cutoff_n uni_n 1 `bw1' `bw2' "" fid_2_n psu_year_n "rf" 1 "In 200 meters"
+
+coefficients_plots "rf" "vertical" "figureC12"
