@@ -15,14 +15,20 @@ cap log close
 set scheme s1mono
 
 *** Definition of globals:
-global slash "/"
+global dash "/"
 
-global main_path "${slash}Users${slash}andresbarriosfernandez${slash}Dropbox${slash}00. JMP Replication Files"
+global main_path "${dash}Users${dash}andresbarriosfernandez${dash}Dropbox${dash}00. JMP Replication Files"
 
-global input_path 	"${main_path}${slash}01. Input"
-global code_path  	"${main_path}${slash}07. R&R AEJ CODE"
-global temp_path  	"${main_path}${slash}08. R&R AEJ DATA"
-global output_path  "${main_path}${slash}09. R&R AEJ OUTPUT"
+/*
+global input_path 	"${main_path}${dash}01. Input"
+global code_path  	"${main_path}${dash}07. R&R AEJ CODE"
+global temp_path  	"${main_path}${dash}08. R&R AEJ DATA"
+global output_path  "${main_path}${dash}09. R&R AEJ OUTPUT"
+*/
+
+global code_path  	"/Users/andresbarriosfernandez/Documents/GitHub/replication_files_neighbors_effects"
+global temp_path  	"/Volumes/Andres for MAC/00_final_datasets_aej_applied/"
+global output_path  "/Users/andresbarriosfernandez/Dropbox/00. JMP Replication Files/12. Outputs Replication"
 
 do "${code_path}${dash}programs.do"
 ********************************************************************************
@@ -67,7 +73,7 @@ do "${code_path}${dash}01_03_02_siblings_estimation_samples.do"
 cd "$output_path${dash}Neighbors"
 
 *** 2.1 Estimate the effect of the closest neighbor going to university in t-1:
-use "${temp_path}${dash}closest_neighbor_t1.dta", clear
+use "${temp_path}${dash}aej_closest_neighbor1.dta", clear
 estimates drop _all
 
 do "${code_path}${dash}02_01_01_main_neighbors_results.do"
@@ -83,7 +89,7 @@ estimates drop _all
 do "${code_path}${dash}02_02_01_neighbors_results_other_t.do"
 
 *** 2.3 Estimate the effect of other closest neighbor going to university in t-1:
-use "${temp_path}${dash}closest_neighbor_multiple_d.dta", clear
+use "${temp_path}${dash}closes_neighbors_multiple_d.dta", clear
 estimates drop _all
 
 do "${code_path}${dash}02_03_01_neighbors_results_other_d.do"

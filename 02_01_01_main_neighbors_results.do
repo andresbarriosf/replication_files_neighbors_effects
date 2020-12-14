@@ -21,8 +21,8 @@ label variable uni_maj_acc 		  "Probability of enrolling in an accredited progra
 label variable retention_inst_o "Probability of remaining in any university"
 label variable retention_uni_o  "Probability of remaining in same university"
 
-label variable graduates_he_o	  "Probability of completing higher ed."
-label variable graduates_uni_o  "Probability of completing university"
+label variable any_degree_o	        "Probability of completing higher ed."
+label variable university_degree_o  "Probability of completing university"
 
 *** Table II *******************************************************************
 forvalues x = 1/2 {
@@ -70,7 +70,7 @@ tables "m1_uni_o m2_uni_o" "iv1_uni_o iv2_uni_o" "fs1_uni_o fs2_uni_o" score_rd 
 estimates drop _all
 
 *** Table III ******************************************************************
-foreach var of varlist he_o voc_o uni_acc enrolls_cruch_o uni_maj_acc same_uni diff_uni{
+foreach var of varlist he_o voc_o uni_acc enrolls_cruch_o uni_maj_acc same_uni diff_uni {
 
     estimate_effects `var' score_rd cutoff uni 1 `bw11' `bw21' "" fid_2_o psu_year_o
 
@@ -85,16 +85,16 @@ score_rd "table3";
 estimates drop _all
 
 *** Table IV *******************************************************************
-foreach var of varlist retention_inst_o retention_uni_o graduates_he_o	graduates_uni_o {
+foreach var of varlist retention_inst_o retention_uni_o any_degree_o university_degree_o {
 
     estimate_effects `var' score_rd cutoff uni 1 `bw11' `bw21' "" fid_2_o psu_year_o
 
 }
 
 #delimit;
-tables "m1_retention_inst_o m1_retention_uni_o m1_graduates_he_o	m1_graduates_uni_o"
-"iv1_retention_inst_o iv1_retention_uni_o iv1_graduates_he_o	iv1_graduates_uni_o"
-"fs1_retention_inst_o fs1_retention_uni_o fs1_graduates_he_o	fs1_graduates_uni_o"
+tables "m1_retention_inst_o m1_retention_uni_o m1_any_degree_o	m1_university_degree_o"
+"iv1_retention_inst_o iv1_retention_uni_o iv1_any_degree_o	iv1_university_degree_o"
+"fs1_retention_inst_o fs1_retention_uni_o fs1_any_degree_o	fs1_university_degree_o"
 score_rd "table4";
 #delimit cr
 estimates drop _all

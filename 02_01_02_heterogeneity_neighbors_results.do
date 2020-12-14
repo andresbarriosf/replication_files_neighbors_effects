@@ -4,6 +4,8 @@
                         Tables: V, VI, F.I, and F.II
                               Figure: E.IV
 *******************************************************************************/
+local bw11 = 49.09
+local bw21 = 64.35
 
 *** Table V ********************************************************************
 foreach var of varlist similar_ses2 same_gender age_difference1 {
@@ -22,6 +24,7 @@ tables "m1_u_similar_ses21 m1_u_similar_ses20 m1_u_same_gender1 m1_u_same_gender
 score_rd "table5";
 #delimit cr
 estimates drop _all
+
 
 *** Table VI ******************************************************************
 foreach var of varlist old_neighbor_o neighbor_remains mother_housewife {
@@ -64,11 +67,11 @@ foreach var of varlist psu_female {
 
     forvalues x = 0/1{
       gen u_`var'`x'0 = uni_o
-      estimate_effects u_`var'`x' score_rd cutoff uni 1 `bw11' `bw21' "& `var' == `x' & psu_female_o == 0" fid_2_o psu_year_o
+      estimate_effects u_`var'`x'0 score_rd cutoff uni 1 `bw11' `bw21' "& `var' == `x' & psu_female_o == 0" fid_2_o psu_year_o
       drop u_`var'`x'0
 
       gen u_`var'`x'1 = uni_o
-      estimate_effects u_`var'`x' score_rd cutoff uni 1 `bw11' `bw21' "& `var' == `x' & psu_female_o == 1" fid_2_o psu_year_o
+      estimate_effects u_`var'`x'1 score_rd cutoff uni 1 `bw11' `bw21' "& `var' == `x' & psu_female_o == 1" fid_2_o psu_year_o
       drop u_`var'`x'1
     }
 }
@@ -82,8 +85,9 @@ score_rd "tableF2";
 estimates drop _all
 
 *** Figure E.IV ****************************************************************
-coefficients_for_plots uni_o score_rd cutoff uni 1 `bw1' `bw2' "& att1 == 1" "all" 1 "Low (33.0%)"
-coefficients_for_plots uni_o score_rd cutoff uni 1 `bw1' `bw2' "& att1 == 2" "all" 2 "Low (52.2%)"
-coefficients_for_plots uni_o score_rd cutoff uni 1 `bw1' `bw2' "& att1 == 3" "all" 3 "Low (72.2%)"
+coefficients_for_plots uni_o score_rd cutoff uni 1 `bw11' `bw21' "& att1 == 1" fid_2_o psu_year_o "all" 1 "Low (33.0%)"
+coefficients_for_plots uni_o score_rd cutoff uni 1 `bw11' `bw21' "& att1 == 2" fid_2_o psu_year_o "all" 2 "Mid (52.2%)"
+coefficients_for_plots uni_o score_rd cutoff uni 1 `bw11' `bw21' "& att1 == 3" fid_2_o psu_year_o "all" 3 "High (72.2%)"
 
-coefficients_plots "all" "vertical" "figureE4"
+coefficients_plots "all" "vertical" "figureE4" cutoff uni
+estimates drop _all

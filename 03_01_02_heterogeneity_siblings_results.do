@@ -24,11 +24,11 @@ foreach var of varlist female_o {
 
     forvalues x = 0/1{
       gen u_`var'`x'0 = uni_y
-      estimate_effects u_`var'`x' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& `var' == `x' & female_y == 0 & Sample == 1" family psu_year_y
+      estimate_effects u_`var'`x'0 score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& `var' == `x' & female_y == 0 & Sample == 1" family psu_year_y
       drop u_`var'`x'0
 
       gen u_`var'`x'1 = uni_y
-      estimate_effects u_`var'`x' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& `var' == `x' & female_y == 1 & Sample == 1" family psu_year_y
+      estimate_effects u_`var'`x'1 score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& `var' == `x' & female_y == 1 & Sample == 1" family psu_year_y
       drop u_`var'`x'1
     }
 }

@@ -3,12 +3,14 @@
                                 Tables: C1, C3, C4
                           Figures: C1, C3, C7, C8, D1
 *******************************************************************************/
+local bw11 = 49.09
+local bw21 = 64.35
 
 *** Figure C1  *****************************************************************
 bys mrun: gen mrun_id = _n
 
 #delimit;
-rddensity score_rd if Sample0 == 1 & closest_neighbor3 == 1 & score_rd >-475 & mrun_id == 1, c(0) p(2) q(3)
+rddensity score_rd if score_rd >-475 & mrun_id == 1, c(0) p(2) q(3)
 fitselect(unrestricted) kernel(triangular)
 bwselect(each) vce(jackknife) plot
 plot_grid(es) level(95)
@@ -33,12 +35,14 @@ graph save "figureC1.gph", replace
 graph export "figureC1.pdf", replace as(pdf)
 
 *** Figure C3  *****************************************************************
+gen m_to_code = km_to_code*10
+label variable m_to_code "Distance to closest neighbor (100m)"
 
 *** Applicants
 #delimit;
 local my_vars1 psu_female_o psu_age_o single_o
 lowIncome_o midIncome_o highIncome_o
-paid_job_o family_group_work_o
+work_o family_group_work_o
 pe_o1 pe_o2 pe_o7 pe_o6
 family_group_he_o
 public_hi_o private_hi_o
@@ -46,7 +50,6 @@ public_o charter_o private_o hc_o g9_gpa_o
 family_group_o
 hh_father_o hh_mother_o
 both_alive_o mother_alive_o father_alive_o
-live_parents_o live_relatives_o live_independently_o
 m_to_code;
 #delimit cr
 
@@ -54,13 +57,13 @@ m_to_code;
 #delimit;
 local my_vars2 psu_female psu_age single
 lowIncome midIncome highIncome
-paid_job_n family_group_work
+work family_group_work
 pe_n1 pe_n2 pe_n7 pe_n6
 public_n charter_n private_n hc g12_gpa
 family_group
+public_hi_n private_hi_n
 hh_father_n hh_mother_n
-both_alive_n mother_alive_n father_alive_n
-live_parents_n live_relatives_n live_independently_n;
+both_alive_n mother_alive_n father_alive_n;
 #delimit cr
 
 local counter = 0
@@ -68,10 +71,10 @@ foreach var of varlist `my_vars1'{
 
     local counter = `counter' + 1
     local vtext1: variable label `var'
-    coefficients_for_plots `x' score_rd cutoff uni 1 `bw11' `bw21' "" fid_2_o psu_year_o "rf" `counter' "`vtext1'"
+    coefficients_for_plots `var' score_rd cutoff uni 1 `bw11' `bw21' "" fid_2_o psu_year_o "rf" `counter' "`vtext1'"
 }
 
-coefficients_plots "rf" "horizontal" "figureC3a"
+coefficients_plots "rf" "horizontal" "figureC3a" cutoff uni 
 estimates drop _all
 
 local counter = 0
@@ -79,11 +82,12 @@ foreach var of varlist `my_vars2'{
 
     local counter = `counter' + 1
     local vtext1: variable label `var'
-    coefficients_for_plots `x' score_rd cutoff uni 1 `bw11' `bw21' "& mrun_id == 1" fid_2_o psu_year_o "rf" `counter' "`vtext1'"
+    coefficients_for_plots `var' score_rd cutoff uni 1 `bw11' `bw21' "& mrun_id == 1" fid_2_o psu_year_o "rf" `counter' "`vtext1'"
 }
 
-coefficients_plots "rf" "horizontal" "figureC3b"
+coefficients_plots "rf" "horizontal" "figureC3b" cutoff uni 
 estimates drop _all
+drop mrun_id 
 
 *** Figure C7  *****************************************************************
 local contador = 0
@@ -109,24 +113,24 @@ foreach num of numlist  0 25 50 75 100 125 150 175 200 {
     drop score_rd_aux cutoff_aux
 }
 
-coefficients_plots "rf" "vertical" "figureC7"
+coefficients_plots "rf" "vertical" "figureC7" cutoff_aux uni 
 estimates drop _all
 
 *** Figure C8  *****************************************************************
-local contador = 0
+local counter = 0
 foreach num of numlist  5/15 {
 
-		local contador = `contador' + 1
+	local counter = `counter' + 1
     local factor = `num'/10
 
 		local bw1 = `factor'*`bw11'
 		local bw2 = `factor'*`bw21'
 
     coefficients_for_plots uni_o score_rd cutoff uni 1 `bw1' `bw2' "" fid_2_o psu_year_o "iv" `counter' "`factor'"
-
+							
 }
 
-coefficients_plots "iv" "vertical" "figureC8"
+coefficients_plots "iv" "vertical" "figureC8" cutoff uni
 estimates drop _all
 
 *** Figure D1  *****************************************************************
@@ -150,7 +154,7 @@ forvalues x = 1/2 {
 
   *** Robust approach proposed by Cattaneo, Calonico and Titunik (2014, 2017):
   #delimit;
-  rdrobust uni_o score_rd if  uni_o !=.,
+  rdrobust uni_o score_rd if  uni_o !=. & psu_region_o == 13, 
   c(0) fuzzy(uni) deriv(0) p(`x') q(`y') kernel(uniform)
   covs(yr_2 yr_3 yr_4 yr_5 yr_6)
   bwselect(msetwo) vce(cluster fid_2_o) level(95) all;
@@ -171,7 +175,7 @@ forvalues x = 1/2 {
   local bwa`x' = e(h_l)
   local bwb`x' = e(h_r)
 
-  estimate_effects uni_o score_rd cutoff uni `x' `bwa`x'' `bwb`x'' "& psu_region == 13" fid_2_o psu_year_o
+  estimate_effects uni_o score_rd cutoff uni `x' `bwa`x'' `bwb`x'' "& psu_region_o == 13" fid_2_o psu_year_o
 
 }
 
@@ -185,10 +189,11 @@ gen uniB = uni_o
 gen uniC = uni_o
 gen uniD = uni_o
 
-estimate_effects uniA score_rd cutoff uni `x' `bw11' `bw21' "" fid_2_o psu_year_o
-estimate_effects uniB score_rd cutoff uni `x' `bw11' `bw21' "" mrun    psu_year_o
-estimate_effects uniC score_rd cutoff uni `x' `bw11' `bw21' "" rbd     psu_year_o
-estimate_effects uniD score_rd cutoff uni `x' `bw11' `bw21' "" psu_municipality_o psu_year_o
+
+estimate_effects uniA score_rd cutoff uni 1 `bw11' `bw21' "" fid_2_o psu_year_o
+estimate_effects uniB score_rd cutoff uni 1 `bw11' `bw21' "" mrun    psu_year_o
+estimate_effects uniC score_rd cutoff uni 1 `bw11' `bw21' "" psu_rbd_o   psu_year_o
+estimate_effects uniD score_rd cutoff uni 1 `bw11' `bw21' "" psu_municipality_o psu_year_o
 
 tables "m1_uniA m1_uniB m1_uniC m1_uniD" "iv1_uniA iv1_uniB iv1_uniC iv1_uniD" "fs1_uniA fs1_uniB fs1_uniC fs1_uniD" score_rd "tableC4"
 estimates drop _all
@@ -262,4 +267,4 @@ coefficients_for_plots pa_registered100 score_rd_n cutoff_n uni_n 1 `bw1' `bw2' 
 coefficients_for_plots pa_registered150 score_rd_n cutoff_n uni_n 1 `bw1' `bw2' "" fid_2_n psu_year_n "rf" 1 "In 150 meters"
 coefficients_for_plots pa_registered200 score_rd_n cutoff_n uni_n 1 `bw1' `bw2' "" fid_2_n psu_year_n "rf" 1 "In 200 meters"
 
-coefficients_plots "rf" "vertical" "figureC12"
+coefficients_plots "rf" "vertical" "figureC12" cutoff_n uni 

@@ -44,7 +44,7 @@ program define estimate_effects
 
   *** 2SLS effects
 	#delimit;
-	ivreghdfe `o' `covs`x'' (`t' = `iv') if `var' !=. & `if',
+	ivreghdfe `o' `covs`x'' (`t' = `iv') if `o' !=. & `if',
 	absorb(`yfe') cluster(`cluster') first ffirst savefirst savefprefix(fs_);
 	#delimit cr
 	estadd ysumm
@@ -73,30 +73,30 @@ program define tables
 
 	*** TABLE II - University Enrollment:
 	#delimit;
-	estout "`rf'"
+	estout `rf'
 	using "`file_name'_rf.tex",
 	cells(b(star fmt(%9.3f)) se(par fmt(%9.3f)))
 	stats(N ymean, fmt(0 2) labels("N. of students" "Outcome mean" ))
 	mlabels() collabels(none) note(" ") style(tex) replace label starlevels(* 0.10 ** 0.05 *** 0.01)
-	indicate("Running variable polynomial =*`rv'*");
+	indicate("Running variable polynomial = *`rv'*");
 	#delimit cr
 
 	#delimit;
-	estout "`iv'"
+	estout `iv'
 	using "`file_name'_2sls.tex",
 	cells(b(star fmt(%9.3f)) se(par fmt(%9.3f)))
 	stats(N fstage ymean, fmt(0 2 2) labels("N. of students" "Kleibergen-Paap F statistic" "Outcome mean" ))
 	mlabels() collabels(none) note(" ") style(tex) replace label starlevels(* 0.10 ** 0.05 *** 0.01)
-	indicate("Running variable polynomial =*`rv'*");
+	indicate("Running variable polynomial = *`rv'*");
 	#delimit cr
 
 	#delimit;
-	estout "`fs'"
+	estout `fs'
 	using "`file_name'_fs.tex",
 	cells(b(star fmt(%9.3f)) se(par fmt(%9.3f)))
 	stats(N, fmt(0) labels("N. of students"))
 	mlabels() collabels(none) note(" ") style(tex) replace label starlevels(* 0.10 ** 0.05 *** 0.01)
-	indicate("Running variable polynomial =*`rv'*");
+	indicate("Running variable polynomial = *`rv'*");
 	#delimit cr
 
 end program
@@ -121,7 +121,7 @@ program define reduced_form_plot
   *** yfe: year fixed effects.
   *** yfeb: number of year fixed effects.
   *** file_name: name of the file.
-  args var x rv iv bw1 bw2 bin1 bin2 restrictions cluster yfe yfeb file_name
+  args o x rv iv bw1 bw2 bin1 bin2 restrictions cluster yfe yfeb file_name
 
   *** Locals:
 	local if "`rv' >= -`bw1' & `rv' <= `bw2' `restrictions'"
@@ -132,12 +132,11 @@ program define reduced_form_plot
   if `yfeb' == 9 local years "yr_2 yr_3 yr_4 yr_5 yr_6 yr_7 yr_8 yr_9"
 
 	*** Remove years noise:
-	reg `o' i.`yfe' if `o' !=. & `if', cluster(`cluster');
+	reg `o' i.`yfe' if `o' !=. & `if', cluster(`cluster')
 	predict `o'2, residuals
 
-	#delimit;
-	sum `o' if `o' !=. & `rv' >=-5 & `rv' < 0 & `if';
-	#delimit cr
+
+	sum `o' if `o' !=. & `rv' >=-5 & `rv' < 0 & `if'
 
 	replace `o'2 = `o'2 + r(mean)
 	local nbins1 = round(`bw1'/`bin1')
@@ -258,7 +257,7 @@ program define coefficients_for_plots
     label variable `t'_chart`counter' "`my_label'"
 
   	#delimit;
-  	ivreghdfe `o' `covs`x'' (`t'_chart`counter' = `iv') if `var' !=. & `if',
+  	ivreghdfe `o' `covs`x'' (`t'_chart`counter' = `iv') if `o' !=. & `if',
   	absorb(`yfe') cluster(`cluster') first ffirst savefirst savefprefix(fs_);
   	#delimit cr
   	estadd ysumm
@@ -284,7 +283,7 @@ program define coefficients_plots
   *** plot: type of plot (rf, iv, all).
   *** plot_opts: horizontal or vertical.
   *** file_name: name of the file.
-  args plot plot_opts file_name
+  args plot plot_opts file_name iv t
 
   *** Horizontal
   if "`plot_opts'" == "horizontal" {
@@ -303,7 +302,7 @@ program define coefficients_plots
 
       graph save   "rf_`file_name'.gph", replace
       graph export "rf_`file_name'.pdf", replace as(pdf)
-      drop `iv'_chart*
+      if "`plot'" == "rf"  drop `iv'_chart*
     }
 
     *** 2sls:
@@ -358,7 +357,7 @@ program define coefficients_plots
 
       graph save   "rf_`file_name'.gph", replace
       graph export "rf_`file_name'.pdf", replace as(pdf)
-      drop `iv'_chart*
+      if "`plot'" == "rf"   drop `iv'_chart*
     }
 
     *** 2sls:
@@ -395,5 +394,5 @@ program define coefficients_plots
       drop `iv'_chart*
     }
   }
-  
+
 end
