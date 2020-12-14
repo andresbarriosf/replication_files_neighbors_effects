@@ -66,7 +66,7 @@ forvalues x = 1/2 {
   reduced_form_plot uni_y `x' score_rd_o cutoff_o `bwA' `bwB' 5 5.5 "& Sample = 1" family psu_year_y 9 "figure`f'b"
 }
 
-tables "m1_uni_y m2_uni_y" "iv1_uni_y iv2_uni_y" "fs1_uni_y fs2_uni_y" score_rd "table7"
+tables "m1_uni_y m2_uni_y" "iv1_uni_y iv2_uni_y" "fs1_uni_y fs2_uni_y" score_rd_o "table7"
 estimates drop _all
 
 *** Table VIII ******************************************************************
@@ -76,7 +76,7 @@ foreach var of varlist he_y voc_y uni_acc enrolls_cruch_y uni_maj_acc same_uni d
 
 }
 
-tables "m1_*" "iv1_*" "fs1_*" score_rd "table8";
+tables "m1_*" "iv1_*" "fs1_*" score_rd_o "table8";
 estimates drop _all
 
 *** Table IX *******************************************************************
@@ -86,5 +86,5 @@ foreach var of varlist retention_system retention_institution graduates_he_y	gra
 
 }
 
-tables "m1_*" "iv1_*" "fs1_*" score_rd "table9"
+tables "m1_*" "iv1_*" "fs1_*" score_rd_o "table9"
 estimates drop _all

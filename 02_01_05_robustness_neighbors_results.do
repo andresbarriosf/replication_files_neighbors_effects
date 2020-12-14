@@ -138,7 +138,7 @@ local bwB = round(`bw21',5)
 
 reduced_form_plot uni_o      1 score_rd_sch cutoff_sch  `bwA' `bwB' 5 5.5 "" fid_2_o psu_year 6 "figureD1a"
 reduced_form_plot applyFA_o  1 score_rd_sch cutoff_sch  `bwA' `bwB' 5 5.5 "" fid_2_o psu_year 6 "figureD1b"
-reduced_form_plot uni2       1 score_rd_sch cutoff_sch  `bwA' `bwB' 5 5.5 "" fid_2_o psu_year 6 "figureD1c"
+reduced_form_plot uni        1 score_rd_sch cutoff_sch  `bwA' `bwB' 5 5.5 "" fid_2_o psu_year 6 "figureD1c"
 reduced_form_plot loans      1 score_rd_sch cutoff_sch  `bwA' `bwB' 5 5.5 "" fid_2_o psu_year 6 "figureD1d"
 
 drop score_rd_sch cutoff_sch

@@ -12,6 +12,7 @@
 clear
 set more off
 cap log close
+set scheme s1mono
 
 *** Definition of globals:
 global slash "/"

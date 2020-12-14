@@ -27,9 +27,9 @@ foreach var of varlist takes_psu2 activeCRUCH applyFA_y cutoff_o receivedFA2_y a
     if `counter' == 9  local my_label "PSU score  | Taking the PSU"
 
     label `var' "`my_label'"
-    estimate_effects `var' score_rd cutoff uni 1 `bw11' `bw21' "& Sample = 1" fid_2_o psu_year_o
+    estimate_effects `var' score_rd_o cutoff_o uni_o 1 `bw11' `bw21' "& Sample = 1" family psu_year_y
 
 }
 
-tables "m1_*" "iv1_*" "fs1_*" score_rd "table10b"
+tables "m1_*" "iv1_*" "fs1_*" score_rd_o "table10b"
 estimates drop _all
