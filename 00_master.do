@@ -17,52 +17,36 @@ set scheme s1mono
 *** Definition of globals:
 global dash "/"
 
-global main_path "${dash}Users${dash}andresbarriosfernandez${dash}Dropbox${dash}00. JMP Replication Files"
+global main_path ""
 
-/*
-global input_path 	"${main_path}${dash}01. Input"
-global code_path  	"${main_path}${dash}07. R&R AEJ CODE"
-global temp_path  	"${main_path}${dash}08. R&R AEJ DATA"
-global output_path  "${main_path}${dash}09. R&R AEJ OUTPUT"
-*/
-global input_path 	"/Users/andresbarriosfernandez/Dropbox/00. JMP Replication Files/01. Input"
-global code_path  	"/Users/andresbarriosfernandez/Documents/GitHub/replication_files_neighbors_effects"
-global temp_path  	"/Volumes/Andres for MAC/00_final_datasets_aej_applied/"
-global output_path  "/Users/andresbarriosfernandez/Dropbox/00. JMP Replication Files/12. Outputs Replication"
+global input_path 	"${main_path}${dash} "
+global code_path  	"${main_path}${dash} "
+global temp_path  	"${main_path}${dash} "
+global output_path  "${main_path}${dash} "
 
 do "${code_path}${dash}programs.do"
+
 ********************************************************************************
 *** I. ESTIMATION SAMPLES
-***    Prepare common datasets.
-***    Prepare neighbors' datasets.
-***    Prepare siblings datasets.
+***    Prepare datasets.
+***    Prepare estimation samples.
 ********************************************************************************
 
-*** 1.1 Generate common datasets:
-do "${code_path}${dash}02_01_psu_scores.do"
-do "${code_path}${dash}02_02_psu_applications.do"
-do "${code_path}${dash}02_03_psu_ses.do"
-do "${code_path}${dash}02_04_psu_siblings.do"
-do "${code_path}${dash}02_05_he_enrollment.do"
-do "${code_path}${dash}02_06_funding.do"
-do "${code_path}${dash}02_07_high_school.do"
-do "${code_path}${dash}02_08_hei_characteristics.do"
-do "${code_path}${dash}02_09_he_graduation.do"
-do "${code_path}${dash}02_10_combine_datasets.do"
+*** 1.1 Generate main datasets:
+do "${code_path}${dash}01_01_01_finding_neighbors.do"
+do "${code_path}${dash}01_01_02_psu_scores.do"
+do "${code_path}${dash}01_01_03_psu_applications.do"
+do "${code_path}${dash}01_01_04_psu_ses.do"
+do "${code_path}${dash}01_01_05_psu_siblings.do"
+do "${code_path}${dash}01_01_06_he_enrollment.do"
+do "${code_path}${dash}01_01_07_he_funding.do"
+do "${code_path}${dash}01_01_08_hs_registers.do"
+do "${code_path}${dash}01_01_09_he_graduation.do"
+do "${code_path}${dash}01_01_10_combining_ds.do"
+do "${code_path}${dash}01_01_11_ds_and_neighbors.do"
 
-*** 1.2 Generate neighbors' datasets:
-*** 1.2.1 Identify close neighbors:
-do "${code_path}${dash}01. Finding neighbors.do"
-
-*** 1.2.2 Generate neighbors' estimation samples:
-do "${code_path}${dash}03. generate estimation samples.do"
-
-*** 1.3 Generate siblings' datasets:
-*** 1.3.1 Identify siblings:
-do "${code_path}${dash}01_03_01_finding_siblings.do"
-
-*** 1.3.2 Generate siblings' estimation samples:
-do "${code_path}${dash}01_03_02_siblings_estimation_samples.do"
+*** 1.2.2 Generate estimation samples:
+do "${code_path}${dash}01_02_01_estimation_samples.do"
 
 ********************************************************************************
 *** II. ESTIMATION OF NEIGHBORS' EFFECTS
@@ -97,7 +81,7 @@ do "${code_path}${dash}02_03_01_neighbors_results_other_d.do"
 cd "$output_path${dash}02_Siblings"
 
 *** 3.1 Estimate the effect of an older sibling going to university:
-use "${temp_path}${dash}siblings.dta", clear
+use "${temp_path}${dash}aej_siblings.dta", clear
 estimates drop _all
 
 do "${code_path}${dash}03_01_01_main_siblings_results.do"

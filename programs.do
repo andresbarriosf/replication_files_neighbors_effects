@@ -396,3 +396,54 @@ program define coefficients_plots
   }
 
 end
+
+********************************************************************************
+*** Program to clean string names:
+********************************************************************************
+capture program drop clean_name
+program define clean_name
+
+	args var_name
+
+	replace `var_name' = subinstr(`var_name', "Á", "A", .)
+	replace `var_name' = subinstr(`var_name', "À", "A", .)
+
+	replace `var_name' = subinstr(`var_name', "É", "E", .)
+	replace `var_name' = subinstr(`var_name', "È", "E", .)
+
+	replace `var_name' = subinstr(`var_name', "Í", "I", .)
+	replace `var_name' = subinstr(`var_name', "Ì", "I", .)
+
+	replace `var_name' = subinstr(`var_name', "Ó", "O", .)
+	replace `var_name' = subinstr(`var_name', "Ò", "O", .)
+
+	replace `var_name' = subinstr(`var_name', "Ú", "U", .)
+	replace `var_name' = subinstr(`var_name', "Ù", "U", .)
+	replace `var_name' = subinstr(`var_name', "Ü", "U", .)
+
+	replace `var_name' = subinstr(`var_name', "Ñ", "N",.)
+	replace `var_name' = subinstr(`var_name', "'", "",.)
+
+	replace `var' = "PONTIFICIA UNIVERSIDAD CATOLICA DE CHILE" if strpos(`var', "PONTIFICIA") > 0 & strpos(`var', "CHILE") > 0
+	replace `var' = "UNIVERSIDAD ADOLFO IBANEZ" if strpos(`var', "UNIVERSIDAD ADOLFO") > 0
+	replace `var' = "UNIVERSIDAD AUSTRAL DE CHILE" if strpos(`var', "UNIVERSIDAD AUSTRAL") > 0
+	replace `var' = "UNIVERSIDAD CATOLICA SILVA HENRIQUEZ" if strpos(`var', "UNIVERSIDAD") > 0 & strpos(`var', "CARDENAL") > 0
+	replace `var' = "UNIVERSIDAD CATOLICA DEL NORTE" if strpos(`var', "UNIVERSIDAD CAT") > 0 & strpos(`var', "DEL NORTE") > 0
+	replace `var' = "UNIVERSIDAD CIENCIAS DE LA INFORMATICA" if strpos(`var', "UNIVERSIDAD CIENCIAS DE LA INFOR") > 0
+	replace `var' = "UNIVERSIDAD DE ARTE Y CIENCIAS SOCIALES ARCIS" if strpos(`var', "UNIVERSIDAD DE ARTE Y CIENCIAS SOCIALES") > 0 & strpos(`var', "ARCIS") > 0
+	replace `var' = "UNIVERSIDAD UNIACC" if strpos(`var', "UNIVERSIDAD DE ARTES, CIENCIAS Y COMUNICACION - UNIACC") > 0
+	replace `var' = "UNIVERSIDAD DE CONCEPCION" if strpos(`var', "UNIVERSIDAD DE CONCEPCI") > 0
+	replace `var' = "UNIVERSIDAD DE LAS AMERICAS" if strpos(`var', "UNIVERSIDAD DE LAS AM") > 0
+	replace `var' = "UNIVERSIDAD DE PLAYA ANCHA DE CIENCIAS DE LA EDUCACION" if strpos(`var', "UNIVERSIDAD DE PLAYA ANCHA") > 0
+	replace `var' = "UNIVERSIDAD DE VINA DEL MAR" if strpos(`var', "UNIVERSIDAD DE VI") > 0
+	replace `var' = "UNIVERSIDAD DEL PACIFICO" if strpos(`var', "UNIVERSIDAD DEL PA") > 0
+	replace `var' = "UNIVERSIDAD SEK" if strpos(`var', "UNIVERSIDAD INTERNACIONAL SEK") > 0
+	replace `var' = "UNIVERSIDAD UCINF" if strpos(`var', "UNIVERSIDAD CIENCIAS DE LA INFORMATICA") > 0
+
+	forvalues x = 1/10{
+		replace `var_name' = subinstr(`var_name', "  ", " ",.)
+	}
+
+	replace `var_name' = strtrim(`var_name')
+
+end
