@@ -100,6 +100,7 @@ Since the names of these files can vary over time, before using the replication 
 <br/>
 
 3. **Other datasets**: <br/>
+
 3.1 Agencia de la Calidad de la Educaci\'on:
 <br/>
 SIMCE: To create Figure I of the paper, I use data on standardized test scores. Specifically I use data from the 2006, 2008, 2010 and 2012 waves of the SIMCE applied to students in grade 10. I combine data on test scores, with the answers that parents provide to a survey that is applied together with the test. To access these data researchers need to fill the form available https://formulario.agenciaeducacion.cl/solicitud_cargar. There are no restrictions to access the data based on nationality or place of residence. However, the application form need to be completed in Spanish.  Since the names of these files can vary over time, before using the replication code they need to be renamed using the following convention:  <br/>
