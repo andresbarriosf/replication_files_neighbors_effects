@@ -5,7 +5,12 @@
 		Individuals completing higher education between 2006-2018
 
 *******************************************************************************/
-forvalues x = 2007/2019 {
+if $replication == 1 local min = 2012
+if $replication == 1 local max = 2012
+if $replication != 1 local min = 2007
+if $replication != 1 local max = 2016
+
+forvalues x = `min'/`max' {
 
 	import delimited "${input_path}${dash}Titulados_Educacion_Superior_`x'.csv", delimiter(";") varnames(1) encoding(utf-8) clear
 

@@ -14,7 +14,10 @@
 
 *** 1.1 High School Graduates:
 *** 1.1.1 All years but 2004 and 2006:
-foreach x of numlist 2002 2003 2005 2007 2008 2009 2010 2011 2012 2013 2014 2015{
+if $replication == 1 local my_nums  2012
+if $replication != 1 local my_nums 2002 2003 2005 2007 2008 2009 2010 2011 2012 2013 2014 2015
+
+foreach x of numlist `my_nums' {
 
 	import delimited "${input_path}${dash}Rendimiento_estudiantes_`x'.csv", delimiter(";") varnames(1) encoding(ISO-8859-1) clear
 
@@ -79,6 +82,7 @@ foreach x of numlist 2002 2003 2005 2007 2008 2009 2010 2011 2012 2013 2014 2015
 	save "${temp_path}${dash}egresadosHS_`x'.dta", replace
 }
 
+if $replication != 1 {
 *** (1.1.2) 2004:
 import delimited "${input_path}${dash}Rendimiento_estudiantes_2004.csv", delimiter(";") varnames(1) encoding(ISO-8859-1) clear
 
@@ -214,9 +218,13 @@ gen año_egreso = 2006
 gen agno = 2006
 compress
 save "${temp_path}${dash}egresadosHS_2006.dta", replace
+}
 
 *** 1.2. 9th Graders ***********************************************************
-foreach x of numlist 2002 2003 2005 2007 2008 2009 2010 2011 2012 2013 2014{
+if $replication == 1 local my_nums 2012
+if $replication != 1 local my_nums 2002 2003 2005 2007 2008 2009 2010 2011 2012 2013 2014
+
+foreach x of numlist `my_nums' {
 
 	import delimited "${input_path}${dash}Rendimiento_estudiantes_`x'.csv", delimiter(";") clear
 
@@ -277,6 +285,7 @@ foreach x of numlist 2002 2003 2005 2007 2008 2009 2010 2011 2012 2013 2014{
 
 }
 
+if $replication != 1{
 *** 2004:
 import delimited "${input_path}${dash}Rendimiento_estudiantes_2004.csv", delimiter(";") clear
 
@@ -424,11 +433,14 @@ forvalues y = 1/20{
 
 compress
 save "${temp_path}${dash}grade9_2006.dta", replace
+}
 
+if $replication == 1 local min = 2012
+if $replication != 1 local min = 2002
 
-forvalues x = 2002/2012 {
+forvalues x = `min'/2012 {
 
-	use grade9_`x'.dta, clear
+	use "${temp_path}${dash}grade9_`x'.dta", clear
 
 	bys mrun: egen max = max(asistencia)
 	duplicates tag mrun, gen(rep)

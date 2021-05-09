@@ -38,8 +38,8 @@ forvalues t = -6/6 {
 		rename code code_o
 		geonear code_o latitud longitud using "${input_path}${dash}mc_`y'.dta", n(code latitud longitud) ign long near(50)
 
-		if `x' <  2011 local keepvars mc_id fid_2 mrun proceso_dir egreso_dir
-		if `x' >= 2011 local keepvars mc_id fid_2 mrun proceso_dir
+		if `x' <  2011 local keepvars fid_2 mrun proceso_dir egreso_dir
+		if `x' >= 2011 local keepvars fid_2 mrun proceso_dir
 
 		rename (code_o code)(code code_o)
 		merge m:1 code using "${input_path}${dash}mc_`x'"", keepusing(code `keepvars')
@@ -48,17 +48,17 @@ forvalues t = -6/6 {
 		rename (code_o code)(code code_o)
 		renvarlab `keepvars', postfix(_o)
 
-		if `y' <  2011 local keepvars code mc_id fid_2 mrun proceso_dir egreso_dir
-		if `y' >= 2011 local keepvars code mc_id fid_2 mrun proceso_dir
+		if `y' <  2011 local keepvars code fid_2 mrun proceso_dir egreso_dir
+		if `y' >= 2011 local keepvars code fid_2 mrun proceso_dir
 
 		merge m:1 code using "${input_path}${dash}mc_`y'"", keepusing(code `keepvars')
 		drop if _merge == 2
 		drop _merge
 
-		if `x' <  2011 & `y' <  2011  order mrun_o code_o mc_id_o fid_2_o proceso_dir_o egreso_dir_o km_to_code mrun code mc_id fid_2 proceso_dir egreso_dir
-		if `x' <  2011 & `y' >= 2011  order mrun_o code_o mc_id_o fid_2_o proceso_dir_o egreso_dir_o km_to_code mrun code mc_id fid_2 proceso_dir
-		if `x' >= 2011 & `y' <  2011  order mrun_o code_o mc_id_o fid_2_o proceso_dir_o km_to_code mrun code mc_id fid_2 proceso_dir egreso_dir
-		if `x' >= 2011 & `y' >= 2011  order mrun_o code_o mc_id_o fid_2_o proceso_dir_o km_to_code mrun code mc_id fid_2 proceso_dir
+		if `x' <  2011 & `y' <  2011  order mrun_o code_o fid_2_o proceso_dir_o egreso_dir_o km_to_code mrun code fid_2 proceso_dir egreso_dir
+		if `x' <  2011 & `y' >= 2011  order mrun_o code_o fid_2_o proceso_dir_o egreso_dir_o km_to_code mrun code fid_2 proceso_dir
+		if `x' >= 2011 & `y' <  2011  order mrun_o code_o fid_2_o proceso_dir_o km_to_code mrun code fid_2 proceso_dir egreso_dir
+		if `x' >= 2011 & `y' >= 2011  order mrun_o code_o fid_2_o proceso_dir_o km_to_code mrun code fid_2 proceso_dir
 		compress
 		save "${temp_path}${dash}v`x'_`y'.dta", replace
 
